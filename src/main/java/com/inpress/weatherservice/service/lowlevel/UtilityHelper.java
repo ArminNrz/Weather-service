@@ -14,6 +14,9 @@ public class UtilityHelper {
     public static <T> T mostCommon(List<T> list) {
         Map<T, Integer> map = new HashMap<>();
 
+        if (list == null || list.isEmpty())
+            return null;
+
         for (T t : list) {
             Integer val = map.get(t);
             map.put(t, val == null ? 1 : val + 1);

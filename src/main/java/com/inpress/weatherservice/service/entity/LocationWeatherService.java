@@ -8,8 +8,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -21,7 +19,6 @@ public class LocationWeatherService {
     public void persist(CurrentWeatherData currentWeatherData) {
         log.debug("Try to save current weather data with: {}", currentWeatherData);
         LocationWeatherEntity entity = mapper.fromCurrentWeather(currentWeatherData.getWeather(), currentWeatherData.getLocationDTO().getId());
-        entity.setDateTime(LocalDateTime.now());
         repository.save(entity);
         log.info("Saved current weather: {}, for location: {}", entity, currentWeatherData.getLocationDTO());
     }

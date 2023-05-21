@@ -13,6 +13,7 @@ import com.inpress.weatherservice.service.thirdparty.OpenWeatherService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ public class CurrentWeatherService {
      * @param locationName: the location name that you want to retrieve current weather for it
      * @return current weather info of that location
      */
+    @Transactional
     public CurrentWeatherData get(String locationName) {
         log.debug("Try to get current weather of location: {}", locationName);
         CurrentWeatherData result = new CurrentWeatherData();

@@ -10,6 +10,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.zalando.problem.Problem;
 import org.zalando.problem.Status;
 
@@ -21,6 +22,7 @@ public class LocationService {
     private final LocationRepository repository;
     private final LocationMapper mapper;
 
+    @Transactional
     public LocationDTO create(LocationDTO dto) {
         log.debug("Try to save location with dto: {}", dto);
         try {
@@ -32,6 +34,7 @@ public class LocationService {
         return dto;
     }
 
+    @Transactional(readOnly = true)
     public LocationDTO getByName(String locationName) {
         log.debug("Try to find location by name: {}", locationName);
         LocationEntity entity = repository.findByLocationName(locationName)
@@ -40,12 +43,14 @@ public class LocationService {
         return mapper.toDto(entity);
     }
 
+    @Transactional(readOnly = true)
     public LocationEntity getEntityByName(String locationName) {
         log.debug("Try to find location by name: {}", locationName);
         return repository.findByLocationName(locationName)
                 .orElseThrow(() -> Problem.valueOf(Status.BAD_REQUEST, "No such location exist"));
     }
 
+    @Transactional(readOnly = true)
     public Page<LocationDTO> getAll(Pageable pageable) {
         log.debug("Try to get all locations with page: {}", pageable);
         return repository.findAll(pageable).map(mapper::toDto);

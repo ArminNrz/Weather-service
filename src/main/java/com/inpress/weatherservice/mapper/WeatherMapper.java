@@ -19,13 +19,13 @@ public interface WeatherMapper {
     @Mapping(target = "maxTemperature", source = "temperature.maxTemperature")
     @Mapping(target = "atmosphericPressure", source = "atmosphericPressure.value")
     @Mapping(target = "humidity", source = "humidity.value")
-    @Mapping(target = "precipitation", source = "forecast", qualifiedByName = "detectPrecipitation")
+    @Mapping(target = "precipitation", source = "forecast", qualifiedByName = "detectForecastPrecipitation")
     @Mapping(target = "windSpeed", source = "wind.speed")
     @Mapping(target = "windDirection", expression = "java(com.inpress.weatherservice.service.lowlevel.WeatherHelper.fromDirection(forecast.getWind().getDegrees()))")
     InstantWeatherData fromInstantForecast(WeatherForecast forecast);
 
-    @Named("detectPrecipitation")
-    default double detectPrecipitation(WeatherForecast weatherForecast) {
+    @Named("detectForecastPrecipitation")
+    default double detectForecastPrecipitation(WeatherForecast weatherForecast) {
         if (weatherForecast.getRain() == null) {
             return 0;
         }
@@ -41,8 +41,18 @@ public interface WeatherMapper {
     @Mapping(target = "maxTemperature", source = "temperature.maxTemperature")
     @Mapping(target = "atmosphericPressure", source = "atmosphericPressure.value")
     @Mapping(target = "humidity", source = "humidity.value")
-    @Mapping(target = "precipitation", source = "rain.threeHourLevel")
+    @Mapping(target = "precipitation", source = "weather", qualifiedByName = "detectPrecipitation")
     @Mapping(target = "windSpeed", source = "wind.speed")
     @Mapping(target = "windDirection", expression = "java(com.inpress.weatherservice.service.lowlevel.WeatherHelper.fromDirection(weather.getWind().getDegrees()))")
     InstantWeatherData fromWeather(Weather weather);
+
+    @Named("detectPrecipitation")
+    default double detectPrecipitation(Weather weather) {
+        if (weather.getRain() == null) {
+            return 0;
+        }
+        else {
+            return weather.getRain().getThreeHourLevel();
+        }
+    }
 }

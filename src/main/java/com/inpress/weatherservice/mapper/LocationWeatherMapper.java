@@ -11,6 +11,7 @@ import java.util.Set;
 public interface LocationWeatherMapper {
 
     @Mapping(target = "locationEntity.id", source = "locationId")
+    @Mapping(target = "dateTime", source = "weatherData.localDateTime")
     LocationWeatherEntity fromCurrentWeather(InstantWeatherData weatherData, Long locationId);
 
     @Mapping(target = "localDateTime", source = "dateTime")
